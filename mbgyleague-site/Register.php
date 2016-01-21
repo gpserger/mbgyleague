@@ -11,12 +11,13 @@
         
         if(strlen($PW)<8){
             echo "too short";
-        }
+        }else{
         $StorePassword = password_hash($PW, PASSWORD_BCRYPT, array('cost' => 10));
         
         $sql = $con->query("INSERT INTO user (Name, Username, Email, Password) values ('{$Name}', '{$Username}', '{$Email}', '{$StorePassword}') ");
         
         header('Location: Login.php');
+        }
     }
 
 
