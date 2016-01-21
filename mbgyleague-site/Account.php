@@ -25,15 +25,17 @@
                 <nav>
                     <ul class="cssmenu">
 
-                        <li><a href="#">Register</a></li>
-                        <li><a href="#">Log in</a></li>
+                        <li><a href="Register.php">Register</a></li>
+                        <li><a href="Login.php">Log in</a></li>
 
                     </ul>
                 </nav>
             </div>
         
         </div>
-        <div class="LeftBody"></div>
+        <div class="LeftBody">
+            <p><a href="Logout.php">Log out</a></p>
+        </div>
         <div class="RightBody">
             <p>Your account.</p><br>
             <?php echo $_SESSION['UserID'];?>
