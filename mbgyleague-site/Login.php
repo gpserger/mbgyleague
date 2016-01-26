@@ -1,8 +1,8 @@
-<?php require 'mbgyleague/Connections/Connections.php'?>
-<?php 
-    
+11<?php require 'mbgyleague/Connections/Connections.php'?>
+<?php
+
     if(isset($_POST['login'])) {
-        
+
             $Email = $_POST['Email'];
             $PW = $_POST['Password'];
 
@@ -17,7 +17,7 @@
             $_SESSION["UserID"] = $row['UserID'];
 
             header('Location: Account.php');
-        
+
         }else{
             session_start();
             $_SESSION["LogInFail"] = "Yes";
@@ -35,7 +35,7 @@
     <meta charset="utf-8">
     <title>Log in</title>
 </head>
-    
+
 <body>
     <div class="Container">
         <div class="Header">
@@ -51,7 +51,7 @@
                     </ul>
                 </nav>
             </div>
-        
+
         </div>
         <div class="LeftBody"></div>
         <div class="RightBody">
@@ -71,7 +71,7 @@
             </form>
         </div>
         <div class="Footer"></div>
-    </div> 
-    
+    </div>
+
 </body>
 </html>
