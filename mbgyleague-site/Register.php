@@ -4,25 +4,47 @@
     if(isset($_POST['Register'])) {
 
         session_start();
-        $Name = $_POST['Name'];
-        $Username = $_POST['Username'];
-        $Email = $_POST['Email'];
-        $PW = $_POST['Password'];
+        $name = $_POST['Name'];
+        $username = $_POST['Username'];
+        $email = $_POST['Email'];
+        $passwd = $_POST['Password'];
 
-        if (strlen($PW)>8){
-          list($user, $emaildomain) = explode('@', $Email);
+
+        $emailresult = $con->query("SELECT * FROM user WHERE Email='$email'");
+        $userresult = $con->query("SELECT * FROM user WHERE Username='$username'");
+
+        // Check if there is a result when searching for email. If there is a result, the email is already taken.
+        if (mysqli_num_rows($emailresult)==0) {
+          // Make sure the domain of the email (user@domain.com) is valid.
+          list($user, $emaildomain) = explode('@', $email);
           if ($emaildomain == 'skola.malmo.se' || $emaildomain == 'malmo.se') {
-            $StorePassword = password_hash($PW, PASSWORD_BCRYPT, array('cost' => 10));
+            // Check if there is a result when searching for username. If there is a result, the username is already taken.
+            if (mysqli_num_rows($userresult)==0) {
+              // Make sure password is at least 8 characters
+              if (strlen($passwd)>=8){
+                // All tests valid, add new user
+                $StorePassword = password_hash($passwd, PASSWORD_BCRYPT, array('cost' => 10));
 
-            $sql = $con->query("INSERT INTO user (Name, Username, Email, Password) values ('{$Name}', '{$Username}', '{$Email}', '{$StorePassword}') ");
+                $sql = $con->query("INSERT INTO user (Name, Username, Email, Password) values ('{$name}', '{$username}', '{$email}', '{$StorePassword}') ");
 
-            header('Location: Login.php');
+                header('Location: Login.php');
+              } else {
+                // Password too short
+                $_SESSION["PasswordTooShort"] = "Yes";
+              }
+            } else {
+              // Username taken
+              $_SESSION["UsernameInUse"] = "Yes";
+            }
           } else {
-            $_SESSION["RegisterEmailFail"] = "Yes";
+            // Email domain invalid
+            $_SESSION["InvalidEmailDomain"] = "Yes";
           }
         } else {
-          $_SESSION["RegisterPasswordFail"] = "Yes";
+          // Email taken
+          $_SESSION["EmailInUse"] = "Yes";
         }
+
     }
 
 
@@ -61,20 +83,28 @@
                 <div class="FormElement">
                     <input name="Name" type="text" required="Required" class="TField" id="Name" placeholder="Full Name">
                 </div>
+
                 <div class="FormElement">
                     <input name="Username" type="text" required="Required" class="TField" id="Username" placeholder="Username">
                 </div>
-                <?php if(isset($_SESSION["RegisterEmailFail"])){ ?>
-                <div class="FormElement">You must sign up with a malmö school email.</div>
+                <?php if(isset($_SESSION["UsernameInUse"])){ ?>
+                <div class="FormElement" style="color: red;">There is already an account with that username.</div>
                 <?php } ?>
+
                 <div class="FormElement">
                     <input name="Email" type="email" required="Required" class="TField" id="Email" placeholder="School-email">
                 </div>
+                <?php if(isset($_SESSION["InvalidEmailDomain"])){ ?>
+                <div class="FormElement" style="color: red;">You must sign up with a malmö school email.</div>
+                <?php } ?>
+                <?php if(isset($_SESSION["EmailInUse"])){ ?>
+                <div class="FormElement" style="color: red;">There is already an account with that email.</div>
+                <?php } ?>
 
-                <?php if(isset($_SESSION["RegisterPasswordFail"])){ ?>
+                <?php if(isset($_SESSION["PasswordTooShort"])){ ?>
                 <div class="FormElement">Password must be at least 8 characters.</div>
                 <?php }?>
-                <div class="FormElement">
+                <div class="FormElement" style="color: red;">
                     <input name="Password" type="password" required="Required" class="TField" id="Password" placeholder="Password">
                 </div>
                 <div class="FormElement">
