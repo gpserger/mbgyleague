@@ -2,4 +2,4 @@ CREATE TABLE `mbgyleague`.`user` ( `UserID` INT(11) UNSIGNED NOT NULL AUTO_INCRE
 
 
 
-CREATE TABLE `mbgyleague`.`lolplayers` ( `id` INT(11) UNSIGNED NOT NULL , `Elo` INT(4) UNSIGNED NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `mbgyleague`.`lolplayers` ( `id` INT(11) UNSIGNED NOT NULL , `elo` INT(4) UNSIGNED NOT NULL DEFAULT 1200, PRIMARY KEY (`id`)) ENGINE = InnoDB;

@@ -5,7 +5,7 @@
     <link href="mbgyleague/mbgyleague-css/Menu.css" rel="stylesheet" type="text/css">
     <link href="mbgyleague/mbgyleague-css/Master.css" rel="stylesheet" type="text/css">
     <meta charset="utf-8">
-    <title>CHANGE ME</title>
+    <title>Player rankings</title>
 </head>
 
 <body>
@@ -17,8 +17,8 @@
                 <nav>
                     <ul class="cssmenu">
 
-                        <li><a href="#">Register</a></li>
-                        <li><a href="#">Log in</a></li>
+                        <li><a href="Register.php">Register</a></li>
+                        <li><a href="Login.php">Log in</a></li>
 
                     </ul>
                 </nav>
@@ -27,6 +27,27 @@
         </div>
         <div class="LeftBody"></div>
         <div class="RightBody">
+          <?php
+
+            $result = mysqli_query($con,"SELECT * FROM lolplayers;");
+
+            echo "<table border='1'>
+            <tr>
+            <th>id</th>
+            <th>elo</th>
+            </tr>";
+
+            while($row = mysqli_fetch_array($result))
+            {
+            echo "<tr>";
+            echo "<td>" . $row['id'] . "</td>";
+            echo "<td>" . $row['elo'] . "</td>";
+            echo "</tr>";
+            }
+            echo "</table>";
+
+            mysqli_close($con);
+            ?>
         </div>
         <div class="Footer"></div>
     </div>

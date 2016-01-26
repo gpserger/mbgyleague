@@ -1,4 +1,4 @@
-11<?php require 'mbgyleague/Connections/Connections.php'?>
+<?php require 'mbgyleague/Connections/Connections.php'?>
 <?php
 
     if(isset($_POST['login'])) {
