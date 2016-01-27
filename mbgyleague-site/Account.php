@@ -1,11 +1,14 @@
 <?php require 'mbgyleague/Connections/Connections.php' ?>
-<?php $id=$_GET["id"];?>
+<?php // $id=$_GET["id"];?>
 <?php
     session_start();
     if(isset($_SESSION["UserID"])){
+      $id=$_SESSION["UserID"];
+    } elseif (isset($_GET["id"])) {
+      $id=$_GET["id"];
+    } else {
+      header('Location: Login.php');
 
-    }else{
-        header('Location: Login.php');
     }
 ?>
 <!DOCTYPE html>
