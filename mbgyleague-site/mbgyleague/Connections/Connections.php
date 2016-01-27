@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 $con = mysqli_connect("localhost", "root", "root", "mbgyleague");
 
 if (mysqli_connect_errno())

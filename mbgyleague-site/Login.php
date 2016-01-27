@@ -15,8 +15,8 @@
             session_start();
 
             $_SESSION["UserID"] = $row['UserID'];
-
-            header('Location: Account.php');
+            $accountphp = 'Location: Account.php?id=' . $row['UserID'];
+            header($accountphp);
 
         }else{
             session_start();
