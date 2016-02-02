@@ -4,7 +4,8 @@
     if(isset($_SESSION["UserID"])){
       $id = $_SESSION["UserID"];
       $result = mysqli_query($con, "SELECT Userlevel FROM `user` WHERE UserID = $id");
-      $Userlevel = $result['Userlevel'];
+      $resultarray = mysqli_fetch_array($result);
+      $Userlevel = $resultarray['Userlevel'];
       if($Userlevel >= 10){
 
       } else {
@@ -14,6 +15,11 @@
     } else {
       header('Location: Login.php');
 
+    }
+
+    if(isset($_POST['Query'])) {
+      $querystring = $_POST['queryfield'];
+      $sql = $con->query($querystring);
     }
 ?>
 <!DOCTYPE html>
@@ -45,12 +51,12 @@
         <div class="LeftBody"></div>
         <div class="RightBody">
           <p>MySQL Query:</p>
-          <textarea rows="4" cols="50" form="sqlquery" name="query">At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies.
+          <textarea rows="4" cols="50" form="sqlquery" name="query" id="queryfield">At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies.
           </textarea>
           <br/>
           <form action="output.php" id="sqlquery" method="post">
             <div class="FormElement">
-                <input name="Register" type="submit" value="Register" title="Register" id="Register" class="button">
+                <input name="Query" type="submit" value="Query" title="Query" id="Query" class="button">
             </div>
           </form>
         </div>

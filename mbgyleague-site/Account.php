@@ -2,13 +2,12 @@
 <?php // $id=$_GET["id"];?>
 <?php
     session_start();
-    if(isset($_SESSION["UserID"])){
-      $id=$_SESSION["UserID"];
-    } elseif (isset($_GET["id"])) {
+    if(isset($_GET["id"])){
       $id=$_GET["id"];
+    } elseif (isset($_SESSION["UserID"])) {
+      $id=$_SESSION["UserID"];
     } else {
       header('Location: Login.php');
-
     }
 ?>
 <!DOCTYPE html>
@@ -55,10 +54,16 @@
         </div>
         <div class="RightBody">
           <?php
-            $result = mysqli_query($con,"SELECT Name, Username FROM `user` WHERE UserID = $id;");
+            $result = mysqli_query($con,"SELECT Name, Username, Userlevel FROM `user` WHERE UserID = $id;");
             $elo_result = mysqli_query($con,"SELECT elo FROM `lolplayers` WHERE id = $id;");
             $row = mysqli_fetch_array($result);
             $elo = mysqli_fetch_array($elo_result);
+
+            if($row['Userlevel'] >= 10) {
+              $accountlevel = $row['Userlevel'] . " (Admin)";
+            } else {
+              $accountlevel = $row['Userlevel'];
+            }
 
             echo "<table cellspacing='0'>";
 
@@ -75,6 +80,11 @@
               echo "<tr class='odd'>";
                 echo "<td class='title'>Rating</td>";
                 echo "<td>" . $elo['elo'] . "</td>";
+              echo "</tr>";
+
+              echo "<tr class='even'>";
+                echo "<td class='title'>Account level</td>";
+                echo "<td>" . $accountlevel . "</td>";
               echo "</tr>";
 
             echo "</table>";
