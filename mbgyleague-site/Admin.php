@@ -51,13 +51,21 @@
         <div class="LeftBody"></div>
         <div class="RightBody">
           <p>MySQL Query:</p>
-          <textarea rows="4" cols="50" form="sqlquery" name="query" id="queryfield">At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies.
-          </textarea>
+          <textarea rows="4" cols="50" form="sqlquery" name="query" id="queryfield">Enter mysql query.          </textarea>
           <br/>
           <form action="output.php" id="sqlquery" method="post">
             <div class="FormElement">
                 <input name="Query" type="submit" value="Query" title="Query" id="Query" class="button">
             </div>
+          </form>
+          <br>
+          <br>
+          <h2>Add match:</h2>
+          <form>
+            Player 1: <input name="Player 1" type="text" class="TField" id"player1" placeholder="UserID">
+            Player 2: <input name="Player 2" type="text" class="TField" id"player2" placeholder="UserID">
+            Winner: 1<input type="radio" name="winner" value="Player 1">
+            2<input type="radio" name="winner" value="Player 2">
           </form>
         </div>
         <div class="Footer"></div>
