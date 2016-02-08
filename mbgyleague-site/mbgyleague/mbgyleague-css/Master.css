@@ -7,14 +7,17 @@ body {
 .Header { width: auto; height: 100px; background-image: url(../mbgyleague-images/logo2.png); background-size: contain;background-repeat: no-repeat; background-position: center; margin-top: 11px; }
 .Menu { height: 50px; }
 .LeftBody {
-    width: 350px;
+    width: 310px;
     float: left;
     height: 400px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 .RightBody {
     width: 450px;
     float: right;
     height: auto;
+    margin-bottom: 20px;
 }
 .FormElement { width: 350px; margin: 6px auto; height: 40px; }
 .TField { height: 30px; width: 350px; border: 1px solid #E0DFDFM; padding-left: 6px; font-family: "Helvetica"; }

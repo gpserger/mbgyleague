@@ -50,90 +50,108 @@
 
         </div>
         <div class="LeftBody">
-            <p><a href="Logout.php">Log out</a></p>
+
         </div>
         <div class="RightBody">
-          <h3 style="font-family: Helvetica;">About:</h3>
+          <?php if ($id==$_SESSION['UserID']) {?>
+            <div>
+              This is your account.<br/><br/>
+              <a href="Logout.php" class="button" style="padding: 10px;margin-top:;">Log out</a>
+            </div>
+          <?php } ?>
           <?php
             $result = mysqli_query($con,"SELECT Name, Username, Userlevel FROM `user` WHERE UserID = $id;");
-            $elo_result = mysqli_query($con,"SELECT elo FROM `lolplayers` WHERE id = $id;");
-            $row = mysqli_fetch_array($result);
-            $elo = mysqli_fetch_array($elo_result);
+            if(mysqli_num_rows($result)!=0){
+              echo "<h3 style='font-family: Helvetica;'>About:</h3>";
+              $elo_result = mysqli_query($con,"SELECT elo FROM `lolplayers` WHERE id = $id;");
+              $row = mysqli_fetch_array($result);
+              $elo = mysqli_fetch_array($elo_result);
 
-            if($row['Userlevel'] >= 10) {
-              $accountlevel = $row['Userlevel'] . " (Admin)";
-            } else {
-              $accountlevel = $row['Userlevel'];
-            }
+              if($row['Userlevel'] >= 10) {
+                $accountlevel = $row['Userlevel'] . " (Admin)";
+              } else {
+                $accountlevel = $row['Userlevel'];
+              }
 
-            echo "<table cellspacing='0'>";
+              echo "<table cellspacing='0'>";
 
-              echo "<tr class='odd'>";
-                echo "<td class='title'><strong>Name</strong></td>";
-                echo "<td>" . $row['Name'] . "</td>";
-              echo "</tr>";
+                echo "<tr class='odd'>";
+                  echo "<td class='title'><strong>Name</strong></td>";
+                  echo "<td>" . $row['Name'] . "</td>";
+                echo "</tr>";
 
-              echo "<tr class='even'>";
-                echo "<td class='title'>Username</td>";
-                echo "<td>" . $row['Username'] . "</td>";
-              echo "</tr>";
+                echo "<tr class='even'>";
+                  echo "<td class='title'>Username</td>";
+                  echo "<td>" . $row['Username'] . "</td>";
+                echo "</tr>";
 
-              echo "<tr class='odd'>";
-                echo "<td class='title'>Rating</td>";
-                echo "<td>" . $elo['elo'] . "</td>";
-              echo "</tr>";
+                echo "<tr class='odd'>";
+                  echo "<td class='title'>Rating</td>";
+                  echo "<td>" . $elo['elo'] . "</td>";
+                echo "</tr>";
 
-              echo "<tr class='even'>";
-                echo "<td class='title'>Account level</td>";
-                echo "<td>" . $accountlevel . "</td>";
-              echo "</tr>";
+                echo "<tr class='even'>";
+                  echo "<td class='title'>Account level</td>";
+                  echo "<td>" . $accountlevel . "</td>";
+                echo "</tr>";
 
-              echo "<tr class='odd'>";
-                echo "<td class='title'>ID</td>";
-                echo "<td>" . $id . "</td>";
-              echo "</tr>";
+                echo "<tr class='odd'>";
+                  echo "<td class='title'>ID</td>";
+                  echo "<td>" . $id . "</td>";
+                echo "</tr>";
 
-            echo "</table>";
+              echo "</table>";
+              echo "<h3 style='font-family: Helvetica;'>Recent matches:</h3>";
+              $recentmatchesresult = mysqli_query($con, "SELECT * FROM `lolmatches` WHERE player1id = $id OR player2id = $id ORDER BY `MatchID` DESC LIMIT 5;");
+              $lastmatchresult = mysqli_query($con, "SELECT `MatchID` FROM `lolmatches` WHERE player1id = $id OR player2ID = $id ORDER BY `MatchID` DESC LIMIT 1;");
 
-            mysqli_close($con);
+              $lastmatchid = mysqli_fetch_field($lastmatchresult);
+
+                if(mysqli_num_rows($recentmatchesresult)!=0){
+                  echo "<table cellspacing='0'>";
+
+                    echo "<tr class='even'>";
+                      echo "<td class='title'><strong>vs.</strong></td>";
+                      echo "<td class='title'><strong>Result</strong></td>";
+                      echo "<td class='title'><strong>played_date</strong></td>";
+                    echo "</tr>";
+
+                  $rowclass="odd";
+                  while ($matchrow = mysqli_fetch_array($recentmatchesresult)) {
+                    if ($rowclass=="even") {
+                      echo "<tr class='even'>";
+                      $rowclass="odd";
+                    } else {
+                      echo "<tr class='odd'>";
+                      $rowclass="even";
+                    }
+                      if ($matchrow['player1id']==$id) {
+                        $opponentlink=$matchrow['player2id'];
+                        echo "<td><a href='Account.php?id=$opponentlink'>" . $matchrow['player2id'] . "</a></td>";
+                      } else {
+                        $opponentlink=$matchrow['player1id'];
+                        echo "<td><a href='Account.php?id=$opponentlink'>" . $matchrow['player1id'] . "</a></td>";
+                      }
+                      if ($matchrow['winner']==$id) {
+                        echo "<td><strong style='color: green;'>Win</strong></td>";
+                      } else {
+                        echo "<td><strong style='color: red;'>Loss</strong></td>";
+                      }
+                      /*echo "<td>" . $matchrow['player1id'] . "</td>";
+                      echo "<td>" . $matchrow['player2id'] . "</td>";
+                      echo "<td>" . $matchrow['winner'] . "</td>";*/
+                      echo "<td>" . substr($matchrow['played_date'], 0, strpos($matchrow['played_date'], " ")) . "</td>";
+                    echo "</tr>";
+                  }
+                  echo "</table>";
+                } else {
+                  echo "<p>No matches to display</p>";
+                }
+              } else {
+                echo "<p>No account with this ID</p>";
+              }
+              mysqli_close($con);
           ?>
-          <h3 style="font-family: Helvetica;">Recent matches:</h3>
-          <?php
-            $recentmatches = mysqli_query($con, "SELECT * FROM `lolmatches` WHERE player1id = $id OR player2id = $id ORDER BY `MatchID` DESC LIMIT 5;");
-            $matchrow = mysqli_fetch_array($recentmatches);
-
-            echo "<table cellspacing='0'>";
-
-              echo "<tr class='odd'>";
-                echo "<td class='title'><strong>Name</strong></td>";
-                echo "<td>" . $row['Name'] . "</td>";
-              echo "</tr>";
-
-              echo "<tr class='even'>";
-                echo "<td class='title'>Username</td>";
-                echo "<td>" . $row['Username'] . "</td>";
-              echo "</tr>";
-
-              echo "<tr class='odd'>";
-                echo "<td class='title'>Rating</td>";
-                echo "<td>" . $elo['elo'] . "</td>";
-              echo "</tr>";
-
-              echo "<tr class='even'>";
-                echo "<td class='title'>Account level</td>";
-                echo "<td>" . $accountlevel . "</td>";
-              echo "</tr>";
-
-              echo "<tr class='odd'>";
-                echo "<td class='title'>ID</td>";
-                echo "<td>" . $id . "</td>";
-              echo "</tr>";
-
-            echo "</table>";
-
-            mysqli_close($con);
-          ?>
-
         </div>
         <div class="Footer"></div>
     </div>
