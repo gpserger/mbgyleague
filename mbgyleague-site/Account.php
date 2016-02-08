@@ -53,6 +53,7 @@
             <p><a href="Logout.php">Log out</a></p>
         </div>
         <div class="RightBody">
+          <h3 style="font-family: Helvetica;">About:</h3>
           <?php
             $result = mysqli_query($con,"SELECT Name, Username, Userlevel FROM `user` WHERE UserID = $id;");
             $elo_result = mysqli_query($con,"SELECT elo FROM `lolplayers` WHERE id = $id;");
@@ -87,11 +88,52 @@
                 echo "<td>" . $accountlevel . "</td>";
               echo "</tr>";
 
+              echo "<tr class='odd'>";
+                echo "<td class='title'>ID</td>";
+                echo "<td>" . $id . "</td>";
+              echo "</tr>";
+
             echo "</table>";
 
             mysqli_close($con);
           ?>
-            <?php echo $_SESSION['UserID'];?>
+          <h3 style="font-family: Helvetica;">Recent matches:</h3>
+          <?php
+            $recentmatches = mysqli_query($con, "SELECT * FROM `lolmatches` WHERE player1id = $id OR player2id = $id ORDER BY `MatchID` DESC LIMIT 5;");
+            $matchrow = mysqli_fetch_array($recentmatches);
+
+            echo "<table cellspacing='0'>";
+
+              echo "<tr class='odd'>";
+                echo "<td class='title'><strong>Name</strong></td>";
+                echo "<td>" . $row['Name'] . "</td>";
+              echo "</tr>";
+
+              echo "<tr class='even'>";
+                echo "<td class='title'>Username</td>";
+                echo "<td>" . $row['Username'] . "</td>";
+              echo "</tr>";
+
+              echo "<tr class='odd'>";
+                echo "<td class='title'>Rating</td>";
+                echo "<td>" . $elo['elo'] . "</td>";
+              echo "</tr>";
+
+              echo "<tr class='even'>";
+                echo "<td class='title'>Account level</td>";
+                echo "<td>" . $accountlevel . "</td>";
+              echo "</tr>";
+
+              echo "<tr class='odd'>";
+                echo "<td class='title'>ID</td>";
+                echo "<td>" . $id . "</td>";
+              echo "</tr>";
+
+            echo "</table>";
+
+            mysqli_close($con);
+          ?>
+
         </div>
         <div class="Footer"></div>
     </div>

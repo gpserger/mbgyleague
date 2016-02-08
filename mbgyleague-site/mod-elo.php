@@ -48,6 +48,8 @@
             <br/>
             <?php
 
+            $debug = 0;
+            //Run when calc button is pressed.
   					if(isset($_POST['Calculate'])) {
               if(isset($_POST['player1id'])){
                 $player1id = $_POST['player1id'];
@@ -64,7 +66,6 @@
                 $win1=1;
                 $win2=0;
                 $winner=1;
-                # code...
               } else {
                 $win1=0;
                 $win2=1;
@@ -77,26 +78,40 @@
               $row2 = mysqli_fetch_array($player2result);
               $R1 = $row1['elo'];
               $R2 = $row2['elo'];
-              if(!isset($R1)||!isset($R2)){
+
+              if(!isset($R1)||!isset($R2)) {
                 echo "User(s) do(es) not have a rating";
               } else {
-                echo "Player 1 id, elo: " . "<strong>" . $player1id . ", " . $R1 . "</strong><br/>";
-                echo "Player 2 id, elo: " . "<strong>" . $player2id . ", " . $R2 . "</strong><br/>";
-                echo "Winner: " . "<strong>Player " . $winner . "</strong><br/>";
 
-                echo "Calc E1 and E2 <br/>";
-                echo "E1 = 1/(1+10^((R2-R1)/400)) <br/>";
-                echo "E2 = 1-E1 <br/>";
                 $E1 = 1/(1+pow(10,(($R2-$R1)/400)));
                 $E2 = 1-$E1;
-                echo "E1 = " . $E1 . "<br/>";
-                echo "E2 = " . $E2 . "<br/>";
-                echo "R1(new)=R1+160*(W-E1) <br/>";
-                echo "R2(new)=R2+160*(W-E2) <br/>";
                 $R1new = $R1+160*($win1-$E1);
                 $R2new = $R2+160*($win2-$E2);
-                echo "R1(new) = " . $R1new . "<br/>";
-                echo "R2(new) = " . $R2new . "<br/>";
+
+                if ($debug==1) {
+                  echo "Player 1 id, elo: " . "<strong>" . $player1id . ", " . $R1 . "</strong><br/>";
+                  echo "Player 2 id, elo: " . "<strong>" . $player2id . ", " . $R2 . "</strong><br/>";
+                  echo "Winner: " . "<strong>Player " . $winner . "</strong><br/>";
+                  echo "Calc E1 and E2 <br/>";
+                  echo "E1 = 1/(1+10^((R2-R1)/400)) <br/>";
+                  echo "E2 = 1-E1 <br/>";
+                  echo "E1 = " . $E1 . "<br/>";
+                  echo "E2 = " . $E2 . "<br/>";
+                  echo "R1(new)=R1+160*(W-E1) <br/>";
+                  echo "R2(new)=R2+160*(W-E2) <br/>";
+                }
+                $diff1 = strval(round($R1new - $R1));
+                if ($diff1 > 0) {
+                  $diff1 = "+" . $diff1;
+                }
+                $diff2 = strval(round($R2new - $R2));
+                if ($diff2 > 0) {
+                  $diff2 = "+" . $diff2;
+                }
+                echo "R1(new) = " . round($R1new) . " (" . $diff1 . ")" . "<br/>";
+                echo "R2(new) = " . round($R2new) . " (" . $diff2 . ")" . "<br/>";
+
+
                 $sql1 = ("UPDATE lolplayers SET elo='$R1new' WHERE id='$player1id'");
                 if (mysqli_query($con, $sql1)) {
 
