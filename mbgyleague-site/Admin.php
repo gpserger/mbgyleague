@@ -20,6 +20,8 @@
     if(isset($_POST['Query'])) {
       $querystring = $_POST['queryfield'];
       $sql = $con->query($querystring);
+      $row = mysqli_fetch_array($row);
+      print_r($row);
     }
 ?>
 <!DOCTYPE html>
@@ -53,7 +55,8 @@
           <p>MySQL Query:</p>
           <textarea rows="4" cols="50" form="sqlquery" name="query" id="queryfield">Enter mysql query.          </textarea>
           <br/>
-          <form action="output.php" id="sqlquery" method="post">
+          <!--<form action="output.php" id="sqlquery" method="post">-->
+          <form action="" id="sqlquery" method="post">
             <div class="FormElement">
                 <input name="Query" type="submit" value="Query" title="Query" id="Query" class="button">
             </div>
@@ -156,6 +159,11 @@
                 } else {
                     echo "Error updating second record: " . mysqli_error($con) . "<br/>";
                 }
+                if ($winner=='1') {
+                  $winner = $player1id;
+                } else {
+                  $winner = $player2id;
+                }
                 $savesql = ("INSERT INTO lolmatches (player1id, player2id, winner) VALUES ({$player1id}, {$player2id}, {$winner}) ");
                 if (mysqli_query($con, $savesql)) {
 
@@ -163,9 +171,6 @@
                     echo "Error updating third record: " . mysqli_error($con) . "<br/>";
                 }
               }
-
-
-
             }
   					?>
           </form>
